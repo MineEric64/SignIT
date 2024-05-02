@@ -60,19 +60,19 @@ class HandExpression:
 
         return sigmoid(np.log(sum))
     
-    def get_highest_similar_expression(self, expressions_defined: list[HandExpression]) -> tuple[HandExpression, float]:
+    def get_highest_similar_expression(self, expressions_defined: list[HandExpression], standard: float = 0.0) -> tuple[HandExpression, float]:
         index: int = -1
-        max_: float = 0
+        max_: float = 0.0
 
         for i in range(0, len(expressions_defined)):
             expression_defined = expressions_defined[i]
             similarity = self.get_similarity(expression_defined)
-            
-            if max_ < similarity:
+
+            if max_ < similarity and similarity >= standard:
                 index = i
                 max_ = similarity
 
-        return (expressions_defined[i], max_) if index >= 0 else (None, 0.0)
+        return (expressions_defined[index], max_) if index >= 0 else None
     
     def calibrate(self):
         if self.size == 0:

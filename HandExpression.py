@@ -13,7 +13,7 @@ class HandExpression:
         self.size = size
         self.mean = mean
         
-        self.calibrate()
+        #self.calibrate()
 
     @staticmethod
     def from_str(command: str) -> HandExpression:
@@ -45,7 +45,7 @@ class HandExpression:
             else:
                 value += ch
 
-        expression.calibrate()
+        #expression.calibrate()
         return expression
 
     def get_similarity(self, expression: HandExpression) -> float:
@@ -54,12 +54,14 @@ class HandExpression:
 
         sum = 0.0 # 차이 절댓값의 합
 
-        for i in range(0, len(self.distances_calibrated)):
-            distance1: float = expression.distances_calibrated[i]
-            distance2: float = self.distances_calibrated[i]
+        for i in range(0, len(self.distances)):
+            distance1: float = expression.distances[i]
+            distance2: float = self.distances[i]
 
+            print(abs(distance1 - distance2))
             sum += abs(distance1 - distance2)
 
+        #print(f"{expression.mean} : {sum}")
         return sigmoid(np.log(sum))
     
     def get_highest_similar_expression(self, expressions_defined: list[HandExpression], standard: float = 0.0) -> tuple[HandExpression, float]:

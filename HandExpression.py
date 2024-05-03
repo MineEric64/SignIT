@@ -1,15 +1,27 @@
 from __future__ import annotations
+import json
 import numpy as np
+
+def list_to_str_with_round(arr: list[float], round_to: int) -> str:
+    info = "["
+    
+    for i in range(0, len(arr)):
+        info += str(round(arr[i], round_to))
+        info += "," if i != len(arr) - 1 else "]"
+
+    return info
 
 class HandExpression:
     mean: str # 뜻
     distances: list[float]
-    distances_calibrated: list[float]
+    distances_calibrated: list[float] # calibrated size: 0.5
+    slopes: list[float]
     size: float # 0.0 ~ 1.0
 
-    def __init__(self, mean: str, size: float, distances: list[float]):
+    def __init__(self, mean: str, size: float, distances: list[float], slopes: list[float]):
         self.distances = distances
         self.distances_calibrated = distances
+        self.slopes = slopes
         self.size = size
         self.mean = mean
         
@@ -17,33 +29,14 @@ class HandExpression:
 
     @staticmethod
     def from_str(command: str) -> HandExpression:
-        expression = HandExpression("", 0, [])
-        value = ""
-        count = 0
+        expression = HandExpression("", 0, [], [])
+        j = json.loads(f"[{command}]")
 
-        for i in range(0, len(command)):
-            ch = command[i]
-
-            if ch == ",":
-                match count:
-                    case 0:
-                        expression.mean = value
-                    case 1:
-                        expression.size = float(value)
-
-                value = ""
-                count += 1
-
-            elif ch == "[": # distances
-                values = command[i + 1:len(command) - 2].split(",")
-                
-                for value2 in values:
-                    expression.distances.append(float(value2))
-
-                break
-
-            else:
-                value += ch
+        expression.mean = str(j[0])
+        expression.size = float(j[1])
+        expression.distances = list(j[2])
+        expression.distances_calibrated = list(j[2])
+        expression.slopes = list(j[3])
 
         expression.calibrate()
         return expression
@@ -57,8 +50,10 @@ class HandExpression:
         for i in range(0, len(self.distances_calibrated)):
             distance1: float = expression.distances_calibrated[i]
             distance2: float = self.distances_calibrated[i]
+            slope1: float = expression.slopes[i]
+            slope2: float = self.slopes[i]
 
-            sum += abs(distance1 - distance2)
+            sum += min(abs(distance1 - distance2), abs(slope1 - slope2))
 
         return sigmoid(np.log(sum))
     
@@ -85,13 +80,10 @@ class HandExpression:
         for i in range(0, len(self.distances)):
             self.distances_calibrated[i] = self.distances[i] * ratio
 
-        self.size = 0.5
-
     def __repr__(self):
-        info = f"{self.mean},{round(self.size, 7)},["
-
-        for i in range(0, len(self.distances)):
-            info += str(round(self.distances[i], 7))
-            info += "," if i != len(self.distances) - 1 else "]"
+        info = f'"{self.mean}",{round(self.size, 7)},'
+        info += list_to_str_with_round(self.distances, 7)
+        info += ","
+        info += list_to_str_with_round(self.slopes, 7)
 
         return info

@@ -4,10 +4,12 @@ import numpy as np
 class HandExpression:
     mean: str # 뜻
     distances: list[float]
+    distances_calibrated: list[float]
     size: float # 0.0 ~ 1.0
 
     def __init__(self, mean: str, size: float, distances: list[float]):
         self.distances = distances
+        self.distances_calibrated = distances
         self.size = size
         self.mean = mean
         
@@ -52,9 +54,9 @@ class HandExpression:
 
         sum = 0.0 # 차이 절댓값의 합
 
-        for i in range(0, len(self.distances)):
-            distance1: float = expression.distances[i]
-            distance2: float = self.distances[i]
+        for i in range(0, len(self.distances_calibrated)):
+            distance1: float = expression.distances_calibrated[i]
+            distance2: float = self.distances_calibrated[i]
 
             sum += abs(distance1 - distance2)
 
@@ -81,7 +83,7 @@ class HandExpression:
         ratio: float = 0.5 / self.size
         
         for i in range(0, len(self.distances)):
-            self.distances[i] *= ratio
+            self.distances_calibrated[i] = self.distances[i] * ratio
 
         self.size = 0.5
 

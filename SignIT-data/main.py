@@ -23,7 +23,7 @@ from PIL import ImageFont, ImageDraw, Image
 from HandExpression import HandExpression
 
 def get_nanum_font(size: int):
-    return ImageFont.truetype("fonts/NEXON_Lv2_Gothic_Bold.ttf", size)
+    return ImageFont.truetype("SignIT-data/fonts/NEXON_Lv2_Gothic_Bold.ttf", size)
 
 FONT_KR = get_nanum_font(24)
     

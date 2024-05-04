@@ -21,7 +21,7 @@
 pip install -r requirements.txt
 ```
 
-### 실행 (SignIT-data)
+### 실행
 ```
 python main.py
 ```

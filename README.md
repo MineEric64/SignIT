@@ -1,11 +1,11 @@
-# SignIT (for DATA)
+# SignIT
 ![logo](https://i.imgur.com/PC8vVZQm.png)
 
 인공지능 머신러닝을 이용한 수화 인식 및 통역
  > [!NOTE]
- > 삼탄소년단 제작
+ > 삼탄소년단 팀 제작
 
-## 시작하기
+## 시작하기 (SignIT-data)
 ### 필수 구성
 |이름|설명|
 |:---:|:---:|
@@ -21,11 +21,11 @@
 pip install -r requirements.txt
 ```
 
-### 실행
+### 실행 (SignIT-data)
 ```
 python main.py
 ```
 또는 `main.py` 파일을 실행하시면 됩니다.
 
 ## 크레딧
-- 충북대학교 내 '공업법규와 창업' 수업 중 창업아이템입니다.
+- 충북대학교 내 '*공업법규와 창업*' 수업 중 창업아이템입니다.
